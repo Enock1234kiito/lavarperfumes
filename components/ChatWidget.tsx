@@ -61,6 +61,12 @@ export default function ChatWidget() {
     if (open && nameSet) inputRef.current?.focus();
   }, [open, nameSet]);
 
+  useEffect(() => {
+    const onOpenChat = () => setOpen(true);
+    window.addEventListener("lavara:open-chat", onOpenChat);
+    return () => window.removeEventListener("lavara:open-chat", onOpenChat);
+  }, []);
+
   const handleSetName = useCallback(() => {
     const trimmed = name.trim();
     if (!trimmed) return;

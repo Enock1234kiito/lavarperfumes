@@ -33,15 +33,15 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-160px)] max-w-md flex-col items-center justify-center px-6 py-20">
-      <h1 className="font-serif text-3xl font-light tracking-[-0.01em]">
+    <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center px-5 py-12 sm:min-h-[calc(100vh-160px)] sm:px-6 sm:py-20">
+      <h1 className="font-serif text-[28px] font-light tracking-[-0.01em] sm:text-3xl">
         Atelier sign-in
       </h1>
-      <p className="mt-2 text-[12px] uppercase tracking-[0.32em] text-muted">
+      <p className="mt-2 text-[11px] uppercase tracking-[0.32em] text-muted sm:text-[12px]">
         Lavara Admin
       </p>
 
-      <form onSubmit={onSubmit} className="mt-10 w-full space-y-5">
+      <form onSubmit={onSubmit} className="mt-8 w-full space-y-5 sm:mt-10">
         <Field
           label="Email"
           type="email"

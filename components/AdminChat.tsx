@@ -91,14 +91,14 @@ export default function AdminChat() {
   }, [activeThread, text, sending]);
 
   return (
-    <section className="mt-12">
-      <h2 className="text-[10px] uppercase tracking-[0.45em] text-muted">
+    <section className="mt-10 sm:mt-12">
+      <h2 className="text-[9.5px] uppercase tracking-[0.4em] text-muted sm:text-[10px] sm:tracking-[0.45em]">
         Customer Chat — {threads.length} conversation
         {threads.length !== 1 ? "s" : ""}
       </h2>
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-[var(--border-light)]">
-        <div className="flex h-[500px]">
+      <div className="mt-5 overflow-hidden rounded-xl border border-[var(--border-light)] sm:mt-6">
+        <div className="flex h-[420px] sm:h-[500px]">
           {/* Thread list */}
           <div
             className={`w-full shrink-0 overflow-y-auto border-r border-[var(--border-light)] md:w-[280px] lg:w-[320px] ${

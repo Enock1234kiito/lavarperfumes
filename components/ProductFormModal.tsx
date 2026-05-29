@@ -5,6 +5,9 @@ import Image from "next/image";
 import { Plus, UploadCloud, X } from "lucide-react";
 import { createProduct, updateProduct } from "@/lib/products";
 import type { Product } from "@/lib/types";
+import { COLLECTIONS } from "@/lib/collections";
+
+const MAX_IMAGES = 10;
 
 type Props = {
   open: boolean;
@@ -22,7 +25,7 @@ export default function ProductFormModal({ open, product, onClose }: Props) {
   const editing = Boolean(product);
 
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("Signature");
+  const [category, setCategory] = useState(COLLECTIONS[0].name);
   const [price, setPrice] = useState<string>("");
   const [description, setDescription] = useState("");
   const [notes, setNotes] = useState(blankNotes);
@@ -50,7 +53,7 @@ export default function ProductFormModal({ open, product, onClose }: Props) {
       setFiles(imgs.map(() => null));
     } else {
       setName("");
-      setCategory("Signature");
+      setCategory(COLLECTIONS[0].name);
       setPrice("");
       setDescription("");
       setNotes(blankNotes);
@@ -186,7 +189,7 @@ export default function ProductFormModal({ open, product, onClose }: Props) {
           {/* Image slots */}
           <div className="mb-8">
             <span className="mb-3 block text-[10px] uppercase tracking-[0.32em] text-muted">
-              Product Images (minimum 2)
+              Product Images (minimum 2, up to {MAX_IMAGES})
             </span>
             <div className="flex flex-wrap gap-4">
               {files.map((file, i) => (
@@ -202,7 +205,7 @@ export default function ProductFormModal({ open, product, onClose }: Props) {
                   label={i === 0 ? "Main" : `Image ${i + 1}`}
                 />
               ))}
-              {files.length < 5 && (
+              {files.length < MAX_IMAGES && (
                 <button
                   type="button"
                   onClick={addSlot}
@@ -217,12 +220,23 @@ export default function ProductFormModal({ open, product, onClose }: Props) {
 
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Field label="Name" value={name} onChange={setName} required />
-            <Field
-              label="Category"
-              value={category}
-              onChange={setCategory}
-              required
-            />
+            <label className="block">
+              <span className="mb-1.5 block text-[10px] uppercase tracking-[0.32em] text-muted">
+                Collection
+              </span>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                required
+                className="w-full border-b border-[var(--border-light)] bg-transparent py-2.5 text-[14px] text-foreground outline-none transition-colors focus:border-foreground"
+              >
+                {COLLECTIONS.map((c) => (
+                  <option key={c.slug} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </label>
             <Field
               label="Price (GH₵)"
               type="number"

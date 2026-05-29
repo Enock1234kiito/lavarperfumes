@@ -1,5 +1,15 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Mail } from "lucide-react";
+
+function scrollToTopIfSamePath(pathname: string, href: string) {
+  const [hrefPath] = href.split("#");
+  if (hrefPath === pathname && typeof window !== "undefined") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -20,14 +30,16 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
-const columns: { title: string; links: { label: string; href: string }[] }[] = [
+type FooterLink =
+  | { label: string; href: string }
+  | { label: string; action: "open-chat" };
+
+const columns: { title: string; links: FooterLink[] }[] = [
   {
     title: "Shop",
     links: [
-      { label: "All Perfumes", href: "#" },
-      { label: "Best Sellers", href: "#bestsellers" },
+      { label: "All Perfumes", href: "/gallery" },
       { label: "Discovery Sets", href: "#" },
-      { label: "Gift Cards", href: "#" },
     ],
   },
   {
@@ -42,18 +54,16 @@ const columns: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: "Company",
     links: [
-      { label: "Our Story", href: "#story" },
-      { label: "Ingredients", href: "#" },
-      { label: "Sustainability", href: "#" },
-      { label: "Journal", href: "#" },
+      { label: "Our Story", href: "/story" },
+      { label: "Ingredients", href: "/ingredients" },
     ],
   },
   {
     title: "Contact",
     links: [
-      { label: "Help & FAQs", href: "#" },
-      { label: "Shipping & Returns", href: "#" },
-      { label: "Contact Us", href: "#" },
+      { label: "Help & Chat", action: "open-chat" as const },
+      { label: "Shipping & Returns", href: "/shipping-returns" },
+      { label: "Contact Us", href: "/contact" },
     ],
   },
 ];
@@ -64,9 +74,10 @@ const socials = [
 ];
 
 export default function Footer() {
+  const pathname = usePathname();
   return (
-    <footer className="relative bg-background pt-12 pb-8 text-foreground sm:pt-16 sm:pb-10">
-      <div className="mx-auto max-w-[1400px] px-5 sm:px-6 lg:px-12">
+    <footer className="relative bg-background pt-12 pb-8 text-foreground sm:pt-20 sm:pb-12 lg:pt-28">
+      <div className="mx-auto max-w-[1500px] px-5 sm:px-6 lg:px-16 xl:px-20">
         {/* Link columns */}
         <div className="grid grid-cols-2 gap-8 border-t border-[var(--border-light)] pt-10 sm:gap-10 md:grid-cols-4 md:gap-8 lg:pt-14">
           {columns.map((col) => (
@@ -77,12 +88,25 @@ export default function Footer() {
               <ul className="space-y-2.5 text-[12.5px] text-foreground/85 sm:space-y-3 sm:text-[13px]">
                 {col.links.map((l) => (
                   <li key={l.label}>
-                    <Link
-                      href={l.href}
-                      className="transition-colors hover:text-foreground"
-                    >
-                      {l.label}
-                    </Link>
+                    {"href" in l ? (
+                      <Link
+                        href={l.href}
+                        onClick={() => scrollToTopIfSamePath(pathname, l.href)}
+                        className="transition-colors hover:text-foreground"
+                      >
+                        {l.label}
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          window.dispatchEvent(new Event("lavara:open-chat"))
+                        }
+                        className="text-left transition-colors hover:text-foreground"
+                      >
+                        {l.label}
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
